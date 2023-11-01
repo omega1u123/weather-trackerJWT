@@ -1,7 +1,5 @@
 package com.example.demo.store.model.api;
 
-
-
 import com.example.demo.store.model.Main;
 import com.example.demo.store.model.Weather;
 import com.example.demo.store.model.Wind;
@@ -16,21 +14,29 @@ import java.util.List;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ForecastApiResponse {
+public class HourlyResponse {
 
     @JsonProperty("list")
-    private List<HourlyForecast> forecasts;
+    private List<HourlyResponse.HourlyForecast> hForecasts;
 
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class HourlyForecast {
+
         @JsonProperty("dt")
         @JsonDeserialize(using = UnixTimestampDeserializer.class)
         private LocalDateTime date;
 
+
         @JsonProperty("main")
         private Main main;
 
+        @JsonProperty("weather")
+        private List<Weather> weatherList;
+
+        @JsonProperty("wind")
+        private Wind wind;
 
     }
+
 }

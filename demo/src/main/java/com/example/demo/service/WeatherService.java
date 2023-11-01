@@ -4,6 +4,7 @@ import com.example.demo.store.CurrentWeather;
 import com.example.demo.store.HourWeather;
 import com.example.demo.store.entity.LocationEntity;
 import com.example.demo.store.model.api.ForecastApiResponse;
+import com.example.demo.store.model.api.HourlyResponse;
 import com.example.demo.store.model.api.WeatherApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpMethod;
@@ -32,6 +33,8 @@ public class WeatherService {
     private static final String BASE_API_URL = "https://api.openweathermap.org";
     private static final String WEATHER_API_URL_SUFFIX = "/data/2.5/weather";
     private static final String FORECAST_API_URL_SUFFIX = "/data/2.5/forecast";
+
+    private static final String HOURLY_API_URL_SUFFIX = "/data/2.5/forecast/hourly";
 
 
     private final HttpClient client = HttpClient.newHttpClient();
@@ -102,6 +105,8 @@ public class WeatherService {
             HttpRequest request = buildRequest(uri);
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+            System.out.println(request.toString());
+
             return objectMapper.readValue(response.body(), ForecastApiResponse.class);
 
     }
@@ -118,9 +123,36 @@ public class WeatherService {
         return objectMapper.readValue(response.body(), WeatherApiResponse.class);
     }
 
+    public HourlyResponse getHourly(LocationEntity location) throws IOException, InterruptedException {
+        URI uri = buildUriForForecastRequest(location);
+        HttpRequest request = buildRequest(uri);
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(request.toString());
+
+        return objectMapper.readValue(response.body(), HourlyResponse.class);
+
+    }
+
+
     public static Map<Integer, ForecastApiResponse.HourlyForecast> getHourlyWeather(List<ForecastApiResponse.HourlyForecast> forecasts, LocationEntity location) throws IOException, InterruptedException {
         LocalDate day = LocalDate.from(forecasts.get(0).getDate());
         Map<Integer, ForecastApiResponse.HourlyForecast> result = new HashMap<>();
+        for(int i = 0; i <5 ; i++){
+            result.put(i+1, forecasts.get(i));
+        }
+
+        return result;
+
+        /*return forecasts
+                .stream()
+                .filter(f -> f.getDate().toLocalDate().isEqual(day))
+                .collect(Collectors.toList());*/
+    }
+
+    public static Map<Integer, HourlyResponse.HourlyForecast> getHourlyWeather2(List<HourlyResponse.HourlyForecast> forecasts, LocationEntity location) throws IOException, InterruptedException {
+        LocalDate day = LocalDate.from(forecasts.get(0).getDate());
+        Map<Integer, HourlyResponse.HourlyForecast> result = new HashMap<>();
         for(int i = 0; i <5 ; i++){
             result.put(i+1, forecasts.get(i));
         }
@@ -206,6 +238,13 @@ public class WeatherService {
                 + "&appid=" + APP_ID
                 + "&units=" + "metric"
                 + "&cnt=" + "40"
+        );
+    }
+
+    private static URI buildForHourlyWeatherRequest(LocationEntity location){
+        return URI.create(BASE_API_URL + HOURLY_API_URL_SUFFIX
+                + "?q=" + location.getName()
+                + "&appid=" + APP_ID
         );
     }
 
