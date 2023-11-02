@@ -165,6 +165,25 @@ public class WeatherService {
                 .collect(Collectors.toList());*/
     }
 
+    /*public static Map<Integer, HourlyResponse.HourlyForecast> getDailyWeather2(List<HourlyResponse.HourlyForecast> forecasts) throws IOException, InterruptedException {
+        LocationEntity loc = new LocationEntity("minsk");
+
+        Map<Integer, HourlyResponse.HourlyForecast> dailyForecasts = new HashMap<>();
+
+        LocalDate currentDay = LocalDate.from(forecasts.get(0).getDate());
+        LocalDate lastDay = LocalDate.from(forecasts.get(forecasts.size()-1).getDate());
+        int i = 1;
+
+        while (currentDay.isBefore(lastDay)) {
+            dailyForecasts.put(i, getMaxTemp2(getForecastForDay(forecasts, currentDay)));
+            System.out.println(currentDay);
+            currentDay = currentDay.plusDays(1);
+            i++;
+        }
+
+        return dailyForecasts;
+    }*/
+
 
     public static List<ForecastApiResponse.HourlyForecast> getForecastForDay(List<ForecastApiResponse.HourlyForecast> forecasts, LocalDate day) throws IOException, InterruptedException {
         return forecasts
@@ -201,9 +220,27 @@ public class WeatherService {
     }
 
 
+
+
     public static ForecastApiResponse.HourlyForecast getMaxTemp(List<ForecastApiResponse.HourlyForecast> forecast){
 
         ForecastApiResponse.HourlyForecast res = forecast.get(0);
+
+
+        for(int i = 0; i < forecast.size() - 1 ; i++){
+            System.out.println(forecast.get(i).getMain().getTemperatureMaximum());
+            if (res.getMain().getTemperature() < forecast.get(i).getMain().getTemperatureMaximum()){
+                res = forecast.get(i);
+            }
+        }
+
+        return res;
+
+    }
+
+    public static HourlyResponse.HourlyForecast getMaxTemp2(List<HourlyResponse.HourlyForecast> forecast){
+
+        HourlyResponse.HourlyForecast res = forecast.get(0);
 
 
         for(int i = 0; i < forecast.size() - 1 ; i++){
