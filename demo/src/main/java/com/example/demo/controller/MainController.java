@@ -57,27 +57,21 @@ public class MainController {
     }
 
     @GetMapping("/getHourlyWeather")
-    public Map<Integer, HourlyResponse.HourlyForecast> getH() throws IOException, InterruptedException {
-        LocationEntity loc = new LocationEntity("minsk");
+    public Map<Integer, HourlyResponse.HourlyForecast> getH(@RequestParam String city) throws IOException, InterruptedException {
+        LocationEntity loc = new LocationEntity(city);
         return weatherService.getHourlyWeather2(weatherService.getHourly(loc).getHForecasts(), loc);
     }
 
     @GetMapping("/getCurrentWeather")
-    public WeatherApiResponse getWeatherForLoc() throws IOException, InterruptedException {
-        LocationEntity loc = new LocationEntity("minsk");
+    public WeatherApiResponse getWeatherForLoc(@RequestParam String city) throws IOException, InterruptedException {
+        LocationEntity loc = new LocationEntity(city);
         return weatherService.getWeatherForLocation(loc);
     }
 
-    /*@GetMapping("/getHourlyWeather")
-    public Map<Integer, ForecastApiResponse.HourlyForecast> getHourly() throws IOException, InterruptedException {
-        LocationEntity loc = new LocationEntity("minsk");
-        return weatherService.getHourlyWeather(weatherService.getForecastForLocation(loc).getForecasts(), loc);
-    }*/
-
 
     @GetMapping("/getDailyWeather")
-    public Map<Integer, ForecastApiResponse.HourlyForecast> getTempForWeek() throws IOException, InterruptedException {
-        LocationEntity loc = new LocationEntity("minsk");
+    public Map<Integer, ForecastApiResponse.HourlyForecast> getTempForWeek(@RequestParam String city) throws IOException, InterruptedException {
+        LocationEntity loc = new LocationEntity(city);
         System.out.println(weatherService.getDailyWeather(weatherService.getForecastForLocation(loc).getForecasts()));
         return weatherService.getDailyWeather(weatherService.getForecastForLocation(loc).getForecasts());
     }

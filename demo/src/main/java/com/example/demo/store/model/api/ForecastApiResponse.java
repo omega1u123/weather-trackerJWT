@@ -28,14 +28,14 @@ public class ForecastApiResponse {
         @JsonDeserialize(using = UnixTimestampDeserializer.class)
         private LocalDateTime date;
 
+        @JsonProperty("main")
+        private Main main;
+
         @JsonProperty("weather")
         private List<Weather> weatherList;
 
         @JsonProperty("wind")
         private Wind wind;
-
-        @JsonProperty("main")
-        private Main main;
 
 
     }
