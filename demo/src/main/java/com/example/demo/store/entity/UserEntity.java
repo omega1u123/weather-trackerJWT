@@ -4,6 +4,8 @@ import com.example.demo.store.RoleEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 public class UserEntity {
@@ -16,6 +18,11 @@ public class UserEntity {
 
     @ManyToOne
     private RoleEntity role;
+
+    //@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    //private List<LocationEntity> locations;
+
+
 
     public UserEntity(String name, String password, RoleEntity role){
         this.name = name;

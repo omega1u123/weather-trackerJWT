@@ -200,7 +200,7 @@ public class WeatherService {
 
         LocalDate currentDay = LocalDate.from(forecasts.get(0).getDate());
         LocalDate lastDay = LocalDate.from(forecasts.get(forecasts.size()-1).getDate());
-         int i = 1;
+        int i = 1;
 
         while (currentDay.isBefore(lastDay)) {
             dailyForecasts.put(i, getMaxTemp(getForecastForDay(forecasts, currentDay)));
@@ -208,6 +208,11 @@ public class WeatherService {
             currentDay = currentDay.plusDays(1);
             i++;
         }
+
+
+
+        dailyForecasts.put(5, getMaxTemp(getForecastForDay(forecasts, lastDay)));
+
         /*return dailyForecasts.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByKey(LocalDate::compareTo))
@@ -218,7 +223,6 @@ public class WeatherService {
                 );*/
         return dailyForecasts;
     }
-
 
 
 
